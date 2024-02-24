@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../estilos/estilos.css">
+    <script src="../js/login.js" defer></script>
+</head>
+<body>
+    <header>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+        </ul>
+    </header>
+
+    <form id="login">
+        <label for="nombre">Nombre de usuario</label>
+        <input type="text" id="nombre" placeholder="Usuario">
+        <label for="clave">Contraseña</label>
+        <input type="password" id="clave" placeholder="Contraseña">
+        <button type="submit" id="inciar_sesion">Inicar sesion</button>
+       <button id="abrir_registro">Registrarse</button>
+    </form>
+
+    <form id="registro" class="oculto">
+        <label for="usuario">Nombre de usuario</label>
+        <input type="text" id="usuario" placeholder="Usuario">
+        <label for="Clave">Contraseña</label>
+        <input type="password" id="Clave" placeholder="Contraseña">
+        <label for="Nombre">Nombre</label>
+        <input type="text" id="Nombre" placeholder="Nombre">
+        <label for="apellidos">Apellidos</label>
+        <input type="text" id="apellidos" placeholder="apellidos">
+        <label for="telf">Telefono</label>
+        <input type="number" id="telefono" placeholder="Telefono">
+        <label for="edad">Edad</label>
+        <input type="number" id="edad" placeholder="Edad">
+        <label for="dni">DNI</label>
+        <input type="text" id="dni" placeholder="DNI">
+        <button type="submit" id="registarse">Registarse</button>
+        <button id="abrir_login">Ya tienes una cuenta? Inicia Sesion</button>
+    </form>
+</body>
+</html>
