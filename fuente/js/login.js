@@ -53,6 +53,22 @@ iniciar_session.addEventListener('click', async (evento)=>{
         let usuario_local = comprobarUsuario_local(nombre_usuario, clave);
         if (resultado || usuario_local) {
             alert("Sesion iniciada");
+
+            let sesionNombreUsuario = JSON.parse(localStorage.getItem(nombre_usuario));
+            let listaFavoritos = [];
+
+            if (sesionNombreUsuario) {
+                listaFavoritos = sesionNombreUsuario.favoritos;
+            }
+
+            let carrito = [];
+            let sesionIniciada = {
+                nombreUsuario: nombre_usuario,
+                carrito: carrito,
+                favoritos: listaFavoritos
+            };
+            localStorage.setItem('sesion_iniciada', JSON.stringify(sesionIniciada));
+            
             window.location.href = "../index.html";
         } else {
             alert("No se ha podido iniciar sesion");
@@ -83,12 +99,14 @@ registrarse.addEventListener('click', (evento) =>{
         telefono: telefonoInput.value,
         edad: edadInput.value,
         DNI: dniInput.value,
+        favoritos: [],
     };
 
     localStorage.setItem(usuarioInput.value,  JSON.stringify(usuarios));
 
     alert("Usuario creado con exito");
-
+    login.classList.remove('oculto');
+    registro.classList.add('oculto');
 });
 
 

@@ -1,6 +1,9 @@
 body{
     margin: 0;
 }
+#botones{
+    margin-bottom: 20px;
+}
 header {
     background-color: #333; /* Color de fondo del encabezado */
     padding: 10px 0; /* Espaciado interno del encabezado */
@@ -78,7 +81,7 @@ button:hover {
     align-items: center;
 }
 #productos ul {
-    width: 50%;
+    width: 80%;
     list-style-type: none;
     padding: 0;
     margin: 0;
@@ -87,6 +90,7 @@ button:hover {
 #productos li {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid #ccc;
 }
@@ -139,4 +143,80 @@ img {
 
 #desc:hover, #asc:hover {
     background-color: #5a6268;
+}
+
+.detalle-producto {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Ancho ajustable según tu preferencia */
+}
+
+.detalle-producto h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.detalle-producto p {
+    margin-bottom: 8px;
+}
+
+.detalle-producto img {
+    max-width: 50%;
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.detalle-producto button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.detalle-producto button:hover {
+    background-color: #0056b3;
+}
+
+.tarjeta {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    transition: all 0.3s ease; /* Transición para todos los cambios durante 0.3 segundos */
+}
+
+/* Estilo cuando el cursor está sobre el producto */
+.tarjeta:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave cuando se pasa el cursor */
+    transform: translateY(-5px); /* Desplazamiento hacia arriba */
+}
+.carrito{
+    position: relative;
+}
+.animacion-carrito {
+    display: inline-block;
+    animation: animacion 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes animacion {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-5deg); }
+    50% { transform: translateX(5px) rotate(5deg); }
+    75% { transform: translateX(-5px) rotate(-5deg); }
+    100% { transform: translateX(0); }
+}
+
+
+.oculto{
+    display: none;
+}
+
+.favorito-activo{
+    background-color: red;
 }
