@@ -53,6 +53,7 @@ iniciar_session.addEventListener('click', async (evento)=>{
         let usuario_local = comprobarUsuario_local(nombre_usuario, clave);
         if (resultado || usuario_local) {
             alert("Sesion iniciada");
+            window.location.href = "../index.html";
         } else {
             alert("No se ha podido iniciar sesion");
         }

@@ -6,8 +6,9 @@ let asc = document.getElementById('asc');
 let desc = document.getElementById('desc');
 let ordenar = false;
 let tipoOrden = "";
-
-
+let ul;
+let table;
+let tbody;
 let vistaActual = "lista";
 
 // Función para cambiar a la vista de lista
@@ -80,8 +81,8 @@ encabezado.appendChild(thPrecio);
 thead.appendChild(encabezado);
 
 function crearTablaHTML(productos) {
-    let table = document.createElement('table');
-    let tbody = document.createElement('tbody');
+    table = document.createElement('table');
+    tbody = document.createElement('tbody');
     
     productos.forEach(producto => {
         let fila = document.createElement('tr');
@@ -117,7 +118,7 @@ function crearTablaHTML(productos) {
 }
 
 function crearListaHTML(productos) {
-    let ul = document.createElement('ul');
+    ul = document.createElement('ul');
     productos.forEach(producto => {
         let li = document.createElement('li');
         let imagen = document.createElement('img');
@@ -130,6 +131,51 @@ function crearListaHTML(productos) {
         ul.appendChild(li);
     });
     return ul;
+}
+
+function añadirElementoALista(productos) {
+    productos.forEach(producto => {
+        let li = document.createElement('li');
+        let imagen = document.createElement('img');
+        imagen.src = producto.image;
+        imagen.alt = producto.title;
+        imagen.style.width = '50px';
+        imagen.style.height = 'auto';
+        li.appendChild(imagen);
+        li.appendChild(document.createTextNode(`${producto.title} - $${producto.price}`));
+        ul.appendChild(li);
+    });
+}
+
+function añadirElementoATabla(productos) {
+    productos.forEach(producto => {
+        let fila = document.createElement('tr');
+
+        // Celda para la imagen
+        let celdaImagen = document.createElement('td');
+        let imagen = document.createElement('img');
+        imagen.src = producto.image;
+        imagen.alt = producto.title;
+        imagen.style.width = '50px';
+        imagen.style.height = 'auto';
+        celdaImagen.appendChild(imagen);
+
+        // Celda para el título
+        let celdaTitulo = document.createElement('td');
+        celdaTitulo.textContent = producto.title;
+
+        // Celda para el precio
+        let celdaPrecio = document.createElement('td');
+        celdaPrecio.textContent = `$${producto.price}`;
+
+        // Agregar las celdas a la fila
+        fila.appendChild(celdaImagen);
+        fila.appendChild(celdaTitulo);
+        fila.appendChild(celdaPrecio);
+
+        // Agregar la fila al tbody
+        tbody.appendChild(fila);
+    });
 }
 
 // Función para renderizar la lista de productos
@@ -158,9 +204,9 @@ async function cargarMasProductos() {
 
         // Agregar los nuevos productos al final del contenedor
         if (vistaActual === 'lista') {
-            contenedor_productos.appendChild(crearListaHTML(nuevosProductos));
+            contenedor_productos.appendChild(añadirElementoALista(nuevosProductos));
         } else if (vistaActual === 'tabla') {
-            contenedor_productos.appendChild(crearTablaHTML(nuevosProductos));
+            contenedor_productos.appendChild(añadirElementoATabla(nuevosProductos));
         }
     } catch (error) {
         console.error('Error al cargar más productos:', error);
@@ -168,7 +214,7 @@ async function cargarMasProductos() {
 }
 
 window.addEventListener('scroll', async () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         // Si el usuario ha llegado al final de la página, carga más productos
         await cargarMasProductos();
     }
