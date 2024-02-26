@@ -5,9 +5,7 @@ let tabla = document.createElement("table");
 let tbody = document.createElement("tbody");
 let productosCarrito = carrito.carrito;
 
-productosCarrito.forEach(element => {
-    console.log(element);
-});
+
 
 let encabezado = document.createElement("thead");
 let encabezadoFila = document.createElement("tr");
@@ -33,7 +31,7 @@ tabla.appendChild(encabezado);
 
 productosCarrito.forEach(producto => {
    let fila = document.createElement("tr");
-
+    fila.id=producto.id;
    let tdImagen = document.createElement("td");
     let imagen = document.createElement("img");
     imagen.src = producto.image;
@@ -48,7 +46,7 @@ productosCarrito.forEach(producto => {
     fila.appendChild(tdNombre);
 
     let tdPrecio = document.createElement("td");
-    tdPrecio.textContent = "$" + producto.price * producto.unidades;
+    tdPrecio.textContent = producto.price * producto.unidades;
     fila.appendChild(tdPrecio);
 
     let tdUnidades = document.createElement("td");
@@ -57,14 +55,34 @@ productosCarrito.forEach(producto => {
 
     let tdAddUnidades = document.createElement("button");
     tdAddUnidades.textContent = "+";
+    tdAddUnidades.addEventListener("click", () =>{
+        let precioActual= parseFloat(tdPrecio.innerHTML);
+        let unidadesActuales = parseInt(tdUnidades.innerHTML);
+        precioActual += parseFloat(producto.price);
+        unidadesActuales += 1;
+        tdPrecio.textContent = precioActual.toFixed(2);
+        tdUnidades.textContent = unidadesActuales;
+    });
     fila.appendChild(tdAddUnidades);
 
     let tddelUnidades = document.createElement("button");
     tddelUnidades.textContent = "-";
+    tddelUnidades.addEventListener("click", () =>{
+        let precioActual= parseFloat(tdPrecio.innerHTML);
+        let unidadesActuales = parseInt(tdUnidades.innerHTML);
+        precioActual -= parseFloat(producto.price);
+        unidadesActuales -= 1;
+        tdPrecio.textContent = precioActual.toFixed(2);
+        tdUnidades.textContent = unidadesActuales;
+    })
     fila.appendChild(tddelUnidades);
 
     let tdEliminar = document.createElement("button");
     tdEliminar.textContent = "Eliminar";
+    tdEliminar.addEventListener("click", () =>{
+        let tr = document.getElementById(producto.id);
+        tr.parentNode.removeChild(tr);
+    })
     fila.appendChild(tdEliminar);
 
     tbody.appendChild(fila);
