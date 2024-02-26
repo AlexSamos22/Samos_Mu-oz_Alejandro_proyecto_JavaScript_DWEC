@@ -102,11 +102,13 @@ desc.addEventListener('click', () => {
     }
 });
 
+let loadingMoreProducts = false;
 //Evento que controla el escroll infinito de la pagina
 window.addEventListener('scroll', async () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        // Si el usuario ha llegado al final de la página, carga más productos
-            await cargarMasProductos();
+    if (!loadingMoreProducts && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) {
+        loadingMoreProducts = true;
+        await cargarMasProductos();
+        loadingMoreProducts = false;
     }
 });
 ///////
