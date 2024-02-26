@@ -13,6 +13,11 @@ let ul;
 let table;
 let tbody;
 let vistaActual = "lista";
+// Definir una variable para el número máximo de productos a cargar en cada llamada
+const productosPorPagina = 20;
+
+// Variable para el número total de productos cargados
+let totalProductosCargados = 0;
 
 ///EVENT LISENERS
 //Evento para poder cerrar sesion, y guardar el carrito actual y los favoritos del usuario en una sesion local propia por usuario
@@ -99,29 +104,32 @@ desc.addEventListener('click', () => {
 
 //Evento que controla el escroll infinito de la pagina
 window.addEventListener('scroll', async () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
         // Si el usuario ha llegado al final de la página, carga más productos
-        await cargarMasProductos();
+            await cargarMasProductos();
     }
 });
 ///////
 
 ///Funciones para obtener los productos y crear las vistas
-async function obtenerProductos() {
+async function obtenerProductos(offset) {
     try {
         let response;
-        if (ordenar && tipoOrden == "asc") {
-            response = await fetch(`${url_productos}?sort=${tipoOrden}`);
-        } else if (ordenar && tipoOrden == "desc") {
-            response = await fetch(`${url_productos}?sort=${tipoOrden}`);
-        } else {
-            response = await fetch(url_productos);
+        // Construye la URL para obtener los productos con el offset y la cantidad de productos por página adecuados
+        let url = `${url_productos}?limit=${productosPorPagina}&offset=${offset}`;
+        
+        // Agrega la lógica de ordenar si es necesario
+        if (ordenar && tipoOrden) {
+            url += `&sort=${tipoOrden}`;
         }
 
-        let productos = await response.json();
-        return productos;
+        response = await fetch(url);
+        let nuevosProductos = await response.json();
+        
+        return nuevosProductos;
     } catch (error) {
         console.error('Error al obtener productos:', error);
+        throw error;
     }
 }
 
@@ -293,6 +301,17 @@ async function obtenerDetallesProducto(id) {
         // Crear botones de acción
         const botonesDeAccion = crearBotonesDeAccion(producto);
 
+        //Unidades del producto
+        let inputUnidades = document.createElement('input');
+        inputUnidades.type = 'number';
+        inputUnidades.id = `input-${producto.id}`;
+        inputUnidades.value = 1; // Valor por defecto
+        inputUnidades.min = 1; // Mínimo permitido
+        inputUnidades.style.width = '40px'; // Ajustar el tamaño si es necesario
+        inputUnidades.addEventListener('click', (evento) => {
+            evento.stopPropagation();
+        });
+
         // Botón para volver atrás
         const botonVolver = document.createElement('button');
         botonVolver.textContent = 'Volver';
@@ -307,6 +326,7 @@ async function obtenerDetallesProducto(id) {
         detalleProductoDiv.appendChild(tituloProducto);
         detalleProductoDiv.appendChild(imagenProducto);
         detalleProductoDiv.appendChild(precioProducto);
+        detalleProductoDiv.appendChild(inputUnidades);
         detalleProductoDiv.appendChild(categoriaProducto);
         detalleProductoDiv.appendChild(descripcionProducto);
 
@@ -494,18 +514,19 @@ function añadirElementoATabla(productos) {
 
 // Función para renderizar la lista de productos
 async function renderizarLista() {
-    let nuevosProductos = await obtenerProductos();
+    let nuevosProductos = await obtenerProductos(0); // Cargar los primeros productos
     // Eliminar cualquier contenido existente en el contenedor
+    totalProductosCargados += nuevosProductos.length;
     contenedor_productos.innerHTML = "";
-    // Agregar los nuevos productos como una tabla
+    // Agregar los nuevos productos como una lista
     contenedor_productos.appendChild(crearListaHTML(nuevosProductos));
-
 }
 
 // Función para renderizar la tabla de productos
 async function renderizarTabla() {
-    let nuevosProductos = await obtenerProductos();
+    let nuevosProductos = await obtenerProductos(0); // Cargar los primeros productos
     // Eliminar cualquier contenido existente en el contenedor
+    totalProductosCargados += nuevosProductos.length;
     contenedor_productos.innerHTML = "";
     // Agregar los nuevos productos como una tabla
     contenedor_productos.appendChild(crearTablaHTML(nuevosProductos));
@@ -514,8 +535,16 @@ async function renderizarTabla() {
 //Funcion que carga mas productos al hacer scroll
 async function cargarMasProductos() {
     try {
-        // Realizar una solicitud para obtener más productos
-        let nuevosProductos = await obtenerProductos();
+        // Realizar una solicitud para obtener más productos a partir del último producto cargado
+        let nuevosProductos = await obtenerProductos(totalProductosCargados);
+
+        if (nuevosProductos.length === 0) {
+            console.log('No hay más productos para cargar.');
+            return;
+        }
+
+        // Incrementar el contador de productos cargados
+        totalProductosCargados += nuevosProductos.length;
 
         // Agregar los nuevos productos al final del contenedor
         if (vistaActual === 'lista') {
