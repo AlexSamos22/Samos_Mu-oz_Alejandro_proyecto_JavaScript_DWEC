@@ -56,15 +56,16 @@ iniciar_session.addEventListener('click', async (evento)=>{
 
             let sesionNombreUsuario = JSON.parse(localStorage.getItem(nombre_usuario));
             let listaFavoritos = [];
+            let articulosCarrito = [];
 
             if (sesionNombreUsuario) {
                 listaFavoritos = sesionNombreUsuario.favoritos;
+                articulosCarrito = sesionNombreUsuario.carrito;
             }
 
-            let carrito = [];
             let sesionIniciada = {
                 nombreUsuario: nombre_usuario,
-                carrito: carrito,
+                carrito: articulosCarrito,
                 favoritos: listaFavoritos
             };
             localStorage.setItem('sesion_iniciada', JSON.stringify(sesionIniciada));
@@ -82,6 +83,7 @@ iniciar_session.addEventListener('click', async (evento)=>{
 registrarse.addEventListener('click', (evento) =>{
     evento.preventDefault();
     let usuarioInput = document.getElementById('usuario');
+    let correoInput = document.getElementById('correo');
     let claveInput = document.getElementById('Clave');
     let nombreInput = document.getElementById('Nombre');
     let apellidosInput = document.getElementById('apellidos');
@@ -91,6 +93,7 @@ registrarse.addEventListener('click', (evento) =>{
 
     let usuarios = {
         nombreUsuario: usuarioInput.value,
+        correo: correoInput.value,
         contraseña: claveInput.value,
         nombre: {
             nombre: nombreInput.value,
@@ -100,6 +103,7 @@ registrarse.addEventListener('click', (evento) =>{
         edad: edadInput.value,
         DNI: dniInput.value,
         favoritos: [],
+        carrito: []
     };
 
     localStorage.setItem(usuarioInput.value,  JSON.stringify(usuarios));

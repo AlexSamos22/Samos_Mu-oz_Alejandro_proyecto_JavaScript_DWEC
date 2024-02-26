@@ -15,7 +15,7 @@ let tbody;
 let vistaActual = "lista";
 
 ///EVENT LISENERS
-//Evento para poder cerrar sesion
+//Evento para poder cerrar sesion, y guardar el carrito actual y los favoritos del usuario en una sesion local propia por usuario
 cerrarSesion.addEventListener('click', (evento) => {
     evento.preventDefault();
 
@@ -27,22 +27,26 @@ cerrarSesion.addEventListener('click', (evento) => {
         let nombreUsuario = sesionIniciada.nombreUsuario;
 
         // Obtener los favoritos del usuario actual
-        let favoritosUsuario = JSON.parse(localStorage.getItem(nombreUsuario));
+        let usuario = JSON.parse(localStorage.getItem(nombreUsuario));
         let nuevosFavoritos = sesionIniciada.favoritos || [];
-        if (!favoritosUsuario) {
-            favoritosUsuario = {
+        let nuevoCarrito = sesionIniciada.carrito || [];
+        if (!usuario) {
+            usuario = {
                 nombreUsuario: nombreUsuario,
-                favoritos: []
+                favoritos: [],
+                carrito: []
             };
         }
 
-        favoritosUsuario.favoritos = [];
+        usuario.favoritos = [];
+        usuario.carrito = [];
 
         // Agregar los nuevos favoritos a la lista existente de favoritos del usuario
-        favoritosUsuario.favoritos.push(...nuevosFavoritos);
+        usuario.favoritos.push(...nuevosFavoritos);
+        usuario.carrito.push(...nuevoCarrito);
 
         // Guardar los cambios en el localStorage
-        localStorage.setItem(nombreUsuario, JSON.stringify(favoritosUsuario));
+        localStorage.setItem(nombreUsuario, JSON.stringify(usuario));
 
         // Eliminar la sesión actual
         localStorage.removeItem('sesion_iniciada');
@@ -58,18 +62,19 @@ cerrarSesion.addEventListener('click', (evento) => {
     }
 });
 
-// Función para cambiar a la vista de lista
+// Evento para cambiar a la vista de lista
 listaBtn.addEventListener('click', () => {
     vistaActual = 'lista';
     renderizarLista();
 });
 
-// Función para cambiar a la vista de tabla
+// Evento para cambiar a la vista de tabla
 tablaBtn.addEventListener('click', () => {
     vistaActual = 'tabla';
     renderizarTabla();
 });
 
+//Evento que realiza el orden ascendente de los productos
 asc.addEventListener('click', () => {
     ordenar = true;
     tipoOrden = "asc";
@@ -81,6 +86,7 @@ asc.addEventListener('click', () => {
 
 });
 
+//Evento que realiza el orden descendente de los productos
 desc.addEventListener('click', () => {
     ordenar = true;
     tipoOrden = "desc";
@@ -91,6 +97,7 @@ desc.addEventListener('click', () => {
     }
 });
 
+//Evento que controla el escroll infinito de la pagina
 window.addEventListener('scroll', async () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
         // Si el usuario ha llegado al final de la página, carga más productos
@@ -118,15 +125,20 @@ async function obtenerProductos() {
     }
 }
 
+//Funcion que se encarga de añadir productos al carrito al dar al boton añadir al carrito
 function añadirProductoAlCarrito(producto) {
+    let unidadesProd = document.getElementById(`input-${producto.id}`)
     carrito.classList.add('animacion-carrito');
     setTimeout(() => {
         carrito.classList.remove('animacion-carrito');
     }, 1000);
+
     const producto_añadido = {
+        id: producto.id,
         image: producto.image,
         title: producto.title,
-        price: producto.price
+        price: producto.price,
+        unidades: parseInt(unidadesProd.value)
     };
 
     const sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada'));
@@ -134,15 +146,33 @@ function añadirProductoAlCarrito(producto) {
     // Obtener el carrito del usuario
     let carritoUsuario = sesionIniciada.carrito;
 
-    // Agregar el producto al carrito del usuario
-    carritoUsuario.push(producto_añadido);
+    // Verificar si el producto ya está en el carrito
+    let encontrado = false;
+    carritoUsuario.forEach((articulo) => {
+        if (producto.id == articulo.id) {
+            articulo.unidades += producto_añadido.unidades;
+            encontrado = true;
+        }
+    });
+
+    // Si el producto no se encontró en el carrito, agregarlo
+    if (!encontrado) {
+        carritoUsuario.push(producto_añadido);
+    }
 
     // Actualizar el carrito en el localStorage
     sesionIniciada.carrito = carritoUsuario;
     localStorage.setItem('sesion_iniciada', JSON.stringify(sesionIniciada));
 }
 
+/*
+    Funcion que crea los botones de: 
+        -Añadir a favoritos con su evento
+        -Boton me gusta y no me gusta con sus eventos
+        -Boton de añadir al carrito con su evento
+*/
 function crearBotonesDeAccion(producto) {
+
     // Botón "Añadir al carrito"
     const botonAgregar = document.createElement('button');
     botonAgregar.textContent = 'Añadir al carrito';
@@ -292,6 +322,7 @@ async function obtenerDetallesProducto(id) {
     }
 }
 
+//Funcion que crea los elementos de la tabla
 function crearFilasTabla(producto) {
     let fila = document.createElement('tr');
     fila.classList.add('tarjeta');
@@ -313,6 +344,19 @@ function crearFilasTabla(producto) {
     let celdaPrecio = document.createElement('td');
     celdaPrecio.textContent = `$${producto.price}`;
 
+    // Celda para las unidades
+    let celdaUnidades = document.createElement('td');
+    let inputUnidades = document.createElement('input');
+    inputUnidades.type = 'number';
+    inputUnidades.id = `input-${producto.id}`;
+    inputUnidades.value = 1; // Valor por defecto
+    inputUnidades.min = 1; // Mínimo permitido
+    inputUnidades.style.width = '40px'; // Ajustar el tamaño si es necesario
+    inputUnidades.addEventListener('click', (evento) => {
+        evento.stopPropagation();
+    });
+    celdaUnidades.appendChild(inputUnidades);
+
     // Celda para los botones de acción
     let celdaAcciones = document.createElement('td');
 
@@ -329,6 +373,7 @@ function crearFilasTabla(producto) {
     fila.appendChild(celdaImagen);
     fila.appendChild(celdaTitulo);
     fila.appendChild(celdaPrecio);
+    fila.appendChild(celdaUnidades);
     fila.appendChild(celdaAcciones);
 
     // Agregar el evento de clic a la fila para obtener detalles del producto
@@ -339,6 +384,7 @@ function crearFilasTabla(producto) {
     return fila;
 }
 
+//Funcion que crea los elementos de la lista
 function crearElementoLista(producto) {
     let li = document.createElement('li');
     li.classList.add('tarjeta');
@@ -354,6 +400,18 @@ function crearElementoLista(producto) {
     // Crear el texto con el título y el precio
     let textoProducto = document.createTextNode(`${producto.title} - $${producto.price}`);
     li.appendChild(textoProducto);
+
+    //Crear el campo de las unidades
+    let inputUnidades = document.createElement('input');
+    inputUnidades.type = 'number';
+    inputUnidades.id = `input-${producto.id}`;
+    inputUnidades.value = 1; // Valor por defecto
+    inputUnidades.min = 1; // Mínimo permitido
+    inputUnidades.style.width = '40px'; // Ajustar el tamaño si es necesario
+    inputUnidades.addEventListener('click', (evento) => {
+        evento.stopPropagation();
+    });
+    li.appendChild(inputUnidades);
 
     // Crear los botones de acción
     const botones = crearBotonesDeAccion(producto);
@@ -381,11 +439,14 @@ let thProducto = document.createElement('th');
 thProducto.textContent = 'Producto';
 let thPrecio = document.createElement('th');
 thPrecio.textContent = 'Precio';
+let thUnidades = document.createElement('th');
+thUnidades.textContent = 'Unidades';
 let thboton = document.createElement('th');
-thboton.textContent = 'Añadir';
+thboton.textContent = 'Acciones';
 encabezado.appendChild(thImg);
 encabezado.appendChild(thProducto);
 encabezado.appendChild(thPrecio);
+encabezado.appendChild(thUnidades);
 encabezado.appendChild(thboton);
 thead.appendChild(encabezado);
 
@@ -458,9 +519,9 @@ async function cargarMasProductos() {
 
         // Agregar los nuevos productos al final del contenedor
         if (vistaActual === 'lista') {
-            contenedor_productos.appendChild(añadirElementoALista(nuevosProductos));
+            añadirElementoALista(nuevosProductos);
         } else if (vistaActual === 'tabla') {
-            contenedor_productos.appendChild(añadirElementoATabla(nuevosProductos));
+            añadirElementoATabla(nuevosProductos);
         }
     } catch (error) {
         console.error('Error al cargar más productos:', error);
