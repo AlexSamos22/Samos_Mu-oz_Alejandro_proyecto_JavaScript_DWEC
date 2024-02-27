@@ -9,7 +9,9 @@ let electronica = document.getElementById('electronica');
 let joyeria = document.getElementById('joyeria');
 let ropaM = document.getElementById('ropaM');
 let ropaH = document.getElementById('ropaH');
+let titulo = document.getElementById("titulo");
 let carrito = document.querySelector('.carrito');
+
 
 
 let url_productos = 'https://fakestoreapi.com/products';
@@ -19,6 +21,8 @@ let ul;
 let table;
 let tbody;
 let vistaActual = "lista";
+let categoria = false;
+let categoriaSelecionada = "";
 // Definir una variable para el número máximo de productos a cargar en cada llamada
 const productosPorPagina = 20;
 
@@ -108,6 +112,54 @@ desc.addEventListener('click', () => {
     }
 });
 
+joyeria.addEventListener("click", (evento) =>{
+    evento.preventDefault();
+    titulo.innerHTML = "Seccion Joyeria";
+    categoria = true;
+    categoriaSelecionada = "category/jewelery";
+    if (vistaActual == "lista") {
+        renderizarLista();
+    } else {
+        renderizarTabla();
+    }
+});
+
+electronica.addEventListener("click", (evento) =>{
+    evento.preventDefault();
+    titulo.innerHTML = "Seccion Electronica";
+    categoria = true;
+    categoriaSelecionada = "category/electronics";
+    if (vistaActual == "lista") {
+        renderizarLista();
+    } else {
+        renderizarTabla();
+    }
+});
+
+ropaH.addEventListener("click", (evento) =>{
+    evento.preventDefault();
+    titulo.innerHTML = "Secccion Hombres";
+    categoria = true;
+    categoriaSelecionada = "category/men's clothing";
+    if (vistaActual == "lista") {
+        renderizarLista();
+    } else {
+        renderizarTabla();
+    }
+});
+
+ropaM.addEventListener("click", (evento) =>{
+    evento.preventDefault();
+    titulo.innerHTML = "Seccion Mujeres";
+    categoria = true;
+    categoriaSelecionada = "category/women's clothing";
+    if (vistaActual == "lista") {
+        renderizarLista();
+    } else {
+        renderizarTabla();
+    }
+});
+
 let loadingMoreProducts = false;
 //Evento que controla el escroll infinito de la pagina
 window.addEventListener('scroll', async () => {
@@ -123,8 +175,13 @@ window.addEventListener('scroll', async () => {
 async function obtenerProductos(offset) {
     try {
         let response;
+        let url;
         // Construye la URL para obtener los productos con el offset y la cantidad de productos por página adecuados
-        let url = `${url_productos}?limit=${productosPorPagina}&offset=${offset}`;
+        if (categoria) {
+            url = `${url_productos}/${categoriaSelecionada}?limit=${productosPorPagina}&offset=${offset}`
+        }else{
+            url = `${url_productos}?limit=${productosPorPagina}&offset=${offset}`;
+        }
         
         // Agrega la lógica de ordenar si es necesario
         if (ordenar && tipoOrden) {
@@ -290,14 +347,12 @@ async function obtenerDetallesProducto(id) {
         const response = await fetch(`${url_productos}/${id}`);
         const producto = await response.json();
 
+        titulo.innerHTML = producto.title;
         // Crear un div para mostrar los detalles del producto
         const detalleProductoDiv = document.createElement('div');
         detalleProductoDiv.classList.add('detalle-producto');
 
         // Crear elementos para mostrar la información del producto
-        const tituloProducto = document.createElement('h2');
-        tituloProducto.textContent = producto.title;
-
         const precioProducto = document.createElement('p');
         precioProducto.textContent = `Precio: $${producto.price}`;
 
@@ -336,7 +391,6 @@ async function obtenerDetallesProducto(id) {
 
         // Agregar elementos al div de detalles del producto
         contenedor_botones.classList.add('oculto');
-        detalleProductoDiv.appendChild(tituloProducto);
         detalleProductoDiv.appendChild(imagenProducto);
         detalleProductoDiv.appendChild(precioProducto);
         detalleProductoDiv.appendChild(inputUnidades);

@@ -4,9 +4,9 @@ let realizarCompra = document.createElement("button");
 realizarCompra.textContent = "Realizar Compra";
 
 if (!carrito) {
-
-    alert("Error: No se ha iniciado sesión.");
-    window.location.href = "../html/login.html";
+    let parrafo = document.createElement("p");
+    parrafo.innerHTML = "No hay una sesion iniciada, por favor inicia sesion para continuar";
+    contenedorCarrito.appendChild(parrafo);
 
 }else{
     
@@ -111,7 +111,14 @@ function crearTablaCarrito(productosCarrito) {
                 unidadesActuales -= 1;
                 tdPrecio.textContent = precioActual.toFixed(2);
                 tdUnidades.textContent = unidadesActuales;
-                actualizarCarrito(producto.id, unidadesActuales);
+                if (unidadesActuales == 0) {
+                    actualizarCarrito(producto.id, 0, true);
+                    let tr = document.getElementById(producto.id);
+                    tr.parentNode.removeChild(tr);
+                }else{
+                     actualizarCarrito(producto.id, unidadesActuales);
+                }
+               
             }
         });
         fila.appendChild(tddelUnidades);
