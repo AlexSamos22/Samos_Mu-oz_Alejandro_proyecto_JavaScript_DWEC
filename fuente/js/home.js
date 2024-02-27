@@ -3,10 +3,16 @@ let contenedor_botones = document.getElementById('botones');
 let listaBtn = document.getElementById('listaBtn');
 let tablaBtn = document.getElementById('tablaBtn');
 let cerrarSesion = document.getElementById('cerrar_sesion');
-let carrito = document.querySelector('.carrito');
-let url_productos = 'https://fakestoreapi.com/products';
 let asc = document.getElementById('asc');
 let desc = document.getElementById('desc');
+let electronica = document.getElementById('electronica');
+let joyeria = document.getElementById('joyeria');
+let ropaM = document.getElementById('ropaM');
+let ropaH = document.getElementById('ropaH');
+let carrito = document.querySelector('.carrito');
+
+
+let url_productos = 'https://fakestoreapi.com/products';
 let ordenar = false;
 let tipoOrden = "";
 let ul;
@@ -137,42 +143,47 @@ async function obtenerProductos(offset) {
 
 //Funcion que se encarga de añadir productos al carrito al dar al boton añadir al carrito
 function añadirProductoAlCarrito(producto) {
-    let unidadesProd = document.getElementById(`input-${producto.id}`)
-    carrito.classList.add('animacion-carrito');
-    setTimeout(() => {
-        carrito.classList.remove('animacion-carrito');
-    }, 1000);
-
-    const producto_añadido = {
-        id: producto.id,
-        image: producto.image,
-        title: producto.title,
-        price: producto.price,
-        unidades: parseInt(unidadesProd.value)
-    };
-
     const sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada'));
 
-    // Obtener el carrito del usuario
-    let carritoUsuario = sesionIniciada.carrito;
-
-    // Verificar si el producto ya está en el carrito
-    let encontrado = false;
-    carritoUsuario.forEach((articulo) => {
-        if (producto.id == articulo.id) {
-            articulo.unidades += producto_añadido.unidades;
-            encontrado = true;
+    if (!sesionIniciada) {
+        alert("Debes iniciar sesion para añadir productos al carrito");
+    }else{
+        let unidadesProd = document.getElementById(`input-${producto.id}`)
+        carrito.classList.add('animacion-carrito');
+        setTimeout(() => {
+            carrito.classList.remove('animacion-carrito');
+        }, 1000);
+    
+        const producto_añadido = {
+            id: producto.id,
+            image: producto.image,
+            title: producto.title,
+            price: producto.price,
+            unidades: parseInt(unidadesProd.value)
+        };
+    
+    
+        // Obtener el carrito del usuario
+        let carritoUsuario = sesionIniciada.carrito;
+    
+        // Verificar si el producto ya está en el carrito
+        let encontrado = false;
+        carritoUsuario.forEach((articulo) => {
+            if (producto.id == articulo.id) {
+                articulo.unidades += producto_añadido.unidades;
+                encontrado = true;
+            }
+        });
+    
+        // Si el producto no se encontró en el carrito, agregarlo
+        if (!encontrado) {
+            carritoUsuario.push(producto_añadido);
         }
-    });
-
-    // Si el producto no se encontró en el carrito, agregarlo
-    if (!encontrado) {
-        carritoUsuario.push(producto_añadido);
+    
+        // Actualizar el carrito en el localStorage
+        sesionIniciada.carrito = carritoUsuario;
+        localStorage.setItem('sesion_iniciada', JSON.stringify(sesionIniciada));
     }
-
-    // Actualizar el carrito en el localStorage
-    sesionIniciada.carrito = carritoUsuario;
-    localStorage.setItem('sesion_iniciada', JSON.stringify(sesionIniciada));
 }
 
 /*
