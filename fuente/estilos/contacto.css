@@ -1,3 +1,6 @@
+body{
+    margin: 0;
+}
 header {
     background-color: #333; /* Color de fondo del encabezado */
     padding: 10px 0; /* Espaciado interno del encabezado */
@@ -27,34 +30,58 @@ header a:hover {
     border-radius: 5px; /* Añadir bordes redondeados al pasar el mouse */
 }
 
-main{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+main h2{
+    text-align: center;
 }
 
+/* Estilos generales del formulario */
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de las etiquetas y campos de entrada */
 label {
     display: block;
     margin-bottom: 5px;
+    font-weight: bold;
 }
-input[type="text"], textarea {
+
+input[type="text"],
+textarea {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
+    border-radius: 5px;
     box-sizing: border-box;
-    resize: vertical;
 }
-input[type="submit"] {
+
+/* Estilos del botón de enviar */
+button[type="submit"] {
     background-color: #4CAF50;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
 }
-input[type="submit"]:hover {
+
+button[type="submit"]:hover {
     background-color: #45a049;
+}
+
+.mensaje-error {
+    color: black; 
+    font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+    margin-top: 5px; /* Espaciado superior */
+    background-color: #ffe6e6; /* Fondo de color claro */
+    border: 1px solid #ffcccc; /* Borde rojo */
+    padding: 5px; /* Espaciado interno */
+    border-radius: 4px; /* Bordes redondeados */
 }

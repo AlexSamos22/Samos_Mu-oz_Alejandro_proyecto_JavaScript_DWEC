@@ -73,3 +73,13 @@ button:hover {
 .oculto {
     display: none;
 }
+
+.mensaje-error {
+    color: black; 
+    font-size: 0.9rem; /* Tamaño de fuente más pequeño */
+    margin-top: 5px; /* Espaciado superior */
+    background-color: #ffe6e6; /* Fondo de color claro */
+    border: 1px solid #ffcccc; /* Borde rojo */
+    padding: 5px; /* Espaciado interno */
+    border-radius: 4px; /* Bordes redondeados */
+}

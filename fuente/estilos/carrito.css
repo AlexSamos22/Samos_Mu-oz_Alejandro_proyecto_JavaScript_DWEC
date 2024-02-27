@@ -1,3 +1,6 @@
+body{
+    margin: 0;
+}
 header {
     background-color: #333; /* Color de fondo del encabezado */
     padding: 10px 0; /* Espaciado interno del encabezado */
