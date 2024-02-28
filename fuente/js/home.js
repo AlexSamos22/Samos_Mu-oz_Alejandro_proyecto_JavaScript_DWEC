@@ -446,6 +446,7 @@ function crearFilasTabla(producto) {
 
     // Celda para los botones de acción
     let celdaAcciones = document.createElement('td');
+    celdaAcciones.classList.add("botones-accion");
 
     // Botones de acción
     let botones = crearBotonesDeAccion(producto);
@@ -485,7 +486,8 @@ function crearElementoLista(producto) {
     li.appendChild(imagen);
 
     // Crear el texto con el título y el precio
-    let textoProducto = document.createTextNode(`${producto.title} - $${producto.price}`);
+    let textoProducto = document.createElement('p');
+    textoProducto.textContent = `${producto.title} - $${producto.price}`
     li.appendChild(textoProducto);
 
     //Crear el campo de las unidades

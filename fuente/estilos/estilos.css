@@ -95,6 +95,15 @@ button:hover {
     border-bottom: 1px solid #ccc;
 }
 
+#productos li p {
+    width: 50%;
+}
+
+#productos li button {
+    width: 10%;
+    margin: 10px;
+}
+
 #productos img {
     margin-right: 10px;
 }
