@@ -1,0 +1,213 @@
+#botones {
+    text-align: center;
+    margin-bottom: 10px;
+    button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+
+    #desc,
+    #asc {
+        background-color: #6c757d;
+
+        &:hover {
+            background-color: #5a6268;
+        }
+    }
+}
+
+#productos {
+    .lista-prod {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 40%;
+        /* Ancho del 50% */
+        margin: 0 auto;
+        /* Centrar horizontalmente */
+
+        li {
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            /* Centrar texto */
+
+            img {
+                width: 30%;
+                margin: 0 auto 10px;
+                border-radius: 8px;
+            }
+
+            h3 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            p {
+                margin: 5px 0;
+                font-size: 16px;
+            }
+
+            .botonera {
+                text-align: center;
+                /* Centrar botones */
+                margin-top: 10px;
+
+                button {
+                    background-color: #343a40;
+                    color: #fff;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    margin-right: 10px;
+                    transition: background-color 0.3s ease;
+
+                    &:hover {
+                        background-color: #23272b;
+                    }
+                }
+            }
+        }
+    }
+
+    .tabla-prod {
+        width: 80%;
+        border-collapse: collapse;
+
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr {
+            &:hover {
+                background-color: #f2f2f2;
+            }
+        }
+
+        img {
+            width: 200px;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+
+        .botonera {
+            text-align: center;
+            width: 40%;
+
+            button {
+                background-color: #343a40;
+                color: #fff;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-right: 5px;
+                transition: background-color 0.3s ease;
+
+                &:hover {
+                    background-color: #23272b;
+                }
+            }
+        }
+    }
+
+    .detalle-producto {
+        border: 1px solid #ccc;
+        /* Borde gris */
+        padding: 20px;
+        /* Espaciado interno */
+        margin-bottom: 20px;
+        /* Margen inferior */
+        background-color: #f9f9f9;
+        /* Color de fondo */
+        border-radius: 5px;
+        /* Bordes redondeados */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* Sombra */
+        text-align: center;
+        width: 40%;
+
+        img {
+            max-width: 15%;
+            /* Imagen dentro del div */
+            height: auto;
+            /* Para mantener la proporción */
+            margin-bottom: 10px;
+            /* Espacio debajo de la imagen */
+        }
+
+        p {
+            margin-bottom: 10px;
+            /* Espacio entre párrafos */
+        }
+
+        input[type='number'] {
+            padding: 5px;
+            /* Espaciado interno */
+            border: 1px solid #ccc;
+            /* Borde gris */
+            border-radius: 3px;
+            /* Bordes redondeados */
+        }
+
+        button {
+            padding: 8px 16px;
+            /* Espaciado interno */
+            background-color: #007bff;
+            /* Color de fondo azul */
+            color: #fff;
+            /* Color del texto blanco */
+            border: none;
+            /* Sin borde */
+            border-radius: 3px;
+            /* Bordes redondeados */
+            cursor: pointer;
+            /* Cursor al pasar sobre el botón */
+            transition: background-color 0.3s;
+            /* Transición suave */
+
+            &:hover {
+                background-color: #0056b3;
+                /* Cambio de color al pasar el ratón */
+            }
+        }
+    }
+
+    .tarjeta {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        transition: all 0.3s ease;
+        /* Transición para todos los cambios durante 0.3 segundos */
+
+        &:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            /* Sombra suave cuando se pasa el cursor */
+            transform: translateY(-5px);
+            /* Desplazamiento hacia arriba */
+        }
+    }
+
+}

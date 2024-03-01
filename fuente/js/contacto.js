@@ -3,7 +3,7 @@ let correo = document.getElementById("correo");
 let asunto = document.getElementById("asunto");
 let descripcion = document.getElementById("descripcion");
 let enviar = document.getElementById("enviar");
-let form = document.querySelector("form");
+let form = document.querySelector(".form-contacto");
 // Deshabilitar el campo de correo electrónico al cargar la página
 correo.disabled = true;
 asunto.disabled = true;

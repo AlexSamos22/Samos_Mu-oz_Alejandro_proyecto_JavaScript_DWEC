@@ -43,11 +43,11 @@ async function obtener_usuarios_api_y_comprobar(url_usuarios, nombre, clave) {
     }
 };
 
-function comprobarUsuario_local(nombreUsuario, contraseña) {
+function comprobarUsuario_local(nombreUsuario, contrasena) {
     let usuarioGuardado = JSON.parse(localStorage.getItem(nombreUsuario));
 
     if (usuarioGuardado) {
-        if (usuarioGuardado.contraseña === contraseña) {
+        if (usuarioGuardado.cont === contrasena) {
             return true;
         } else {
             return false;
@@ -100,7 +100,7 @@ registrarse.addEventListener('click', (evento) => {
     let usuarios = {
         nombreUsuario: usuarioInput.value,
         correo: correoInput.value,
-        contraseña: claveInput.value,
+        cont: claveInput.value,
         nombre: {
             nombre: nombreInput.value,
             apellidos: apellidosInput.value

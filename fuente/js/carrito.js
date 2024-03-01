@@ -1,6 +1,7 @@
 let carrito = JSON.parse(localStorage.getItem("sesion_iniciada"));
 let contenedorCarrito = document.getElementById("carrito");
 let realizarCompra = document.createElement("button");
+realizarCompra.classList.add("realizar-compra");
 realizarCompra.textContent = "Realizar Compra";
 
 if (!carrito) {
@@ -40,8 +41,11 @@ if (!carrito) {
 
 function crearTablaCarrito(productosCarrito) {
     let tabla = document.createElement("table");
+    tabla.classList.add("tabla-carrito");
     let tbody = document.createElement("tbody");
     let encabezado = document.createElement("thead");
+
+    //Creacion del encabezado de la tabla
     let encabezadoFila = document.createElement("tr");
     let thImagen = document.createElement("th");
     thImagen.textContent = "Imagen";
@@ -66,6 +70,8 @@ function crearTablaCarrito(productosCarrito) {
     productosCarrito.forEach(producto => {
         let fila = document.createElement("tr");
         fila.id = producto.id;
+
+        //Creacion del td para la imagen
         let tdImagen = document.createElement("td");
         let imagen = document.createElement("img");
         imagen.src = producto.image;
@@ -75,18 +81,25 @@ function crearTablaCarrito(productosCarrito) {
         tdImagen.appendChild(imagen);
         fila.appendChild(tdImagen);
 
+        //Creacion del td para el nombre
         let tdNombre = document.createElement("td");
         tdNombre.textContent = producto.title;
         fila.appendChild(tdNombre);
 
+        //Creacion del td para el precio
         let tdPrecio = document.createElement("td");
         tdPrecio.textContent = producto.price * producto.unidades;
         fila.appendChild(tdPrecio);
 
+        //Creacion del td para las unidades
         let tdUnidades = document.createElement("td");
         tdUnidades.textContent = producto.unidades;
         fila.appendChild(tdUnidades);
 
+        //Creacion del td que contendra todos los botones
+        let tdBotones = document.createElement("td");
+
+        //Boton para añadir unidades
         let tdAddUnidades = document.createElement("button");
         tdAddUnidades.textContent = "+";
         tdAddUnidades.addEventListener("click", () => {
@@ -99,8 +112,9 @@ function crearTablaCarrito(productosCarrito) {
             actualizarCarrito(producto.id, unidadesActuales);
             
         });
-        fila.appendChild(tdAddUnidades);
+        tdBotones.appendChild(tdAddUnidades);
 
+        //Boton para eliminar unidades
         let tddelUnidades = document.createElement("button");
         tddelUnidades.textContent = "-";
         tddelUnidades.addEventListener("click", () => {
@@ -121,8 +135,9 @@ function crearTablaCarrito(productosCarrito) {
                
             }
         });
-        fila.appendChild(tddelUnidades);
+        tdBotones.appendChild(tddelUnidades);
 
+        //Boton para eliminar el producto
         let tdEliminar = document.createElement("button");
         tdEliminar.textContent = "Eliminar";
         tdEliminar.addEventListener("click", () => {
@@ -131,7 +146,9 @@ function crearTablaCarrito(productosCarrito) {
             actualizarCarrito(producto.id, 0, true);
 
         });
-        fila.appendChild(tdEliminar);
+        tdBotones.appendChild(tdEliminar);
+
+        fila.appendChild(tdBotones);
 
         tbody.appendChild(fila);
     });
@@ -153,6 +170,23 @@ function actualizarCarrito(idProducto, nuevasUnidades = 0, eliminar = false) {
         if (eliminar) {
             // Eliminar el producto del carrito usando splice
             carrito.splice(indiceProducto, 1);
+
+            //Si cuando se elimina el producto ya no hay mas productos
+            if (carrito.length === 0) {
+                // Limpiar el contenido del contenedor del carrito
+                contenedorCarrito.innerHTML = "";
+
+                // Mostrar el mensaje de que no hay artículos en el carrito
+                let parrafo = document.createElement("p");
+                let boton = document.createElement("button");
+                parrafo.innerHTML = "Aun no tienes artículos en tu carrito";
+                boton.innerHTML = "Ver artículos";
+                boton.addEventListener("click", () =>{
+                    window.location.href = "../index.html";
+                });
+                contenedorCarrito.appendChild(parrafo);
+                contenedorCarrito.appendChild(boton);
+            }
         } else {
             // Actualizar las unidades del producto si nuevasUnidades no es null
             if (nuevasUnidades != 0) {

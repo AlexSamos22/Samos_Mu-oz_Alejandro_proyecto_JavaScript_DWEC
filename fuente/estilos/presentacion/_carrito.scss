@@ -1,0 +1,55 @@
+#carrito{
+    .tabla-carrito{
+        width: 50%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+
+        th, td{
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th{
+            background-color: #f2f2f2;
+        }
+
+        td{
+
+            img{
+                max-width: 80px;
+                height: auto;
+            }
+
+            button{
+                padding: 6px 12px;
+                margin-right: 5px;
+                border: none;
+                background-color: #007bff;
+                color: #fff;
+                cursor: pointer;
+                border-radius: 3px;
+                transition: background-color 0.3s;
+
+                &:hover{
+                    background-color: #0056b3;
+                }
+            }
+        }
+    }
+
+    .realizar-compra{
+        padding: 6px 12px;
+        margin-right: 5px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: background-color 0.3s;
+
+        &:hover{
+            background-color: #0056b3;
+        }
+    }
+}

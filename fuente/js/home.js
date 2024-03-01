@@ -23,6 +23,7 @@ let tbody;
 let vistaActual = "lista";
 let categoria = false;
 let categoriaSelecionada = "";
+let masProductos = false;
 // Definir una variable para el número máximo de productos a cargar en cada llamada
 const productosPorPagina = 20;
 
@@ -72,8 +73,6 @@ cerrarSesion.addEventListener('click', (evento) => {
     } else {
         // Si no hay sesión iniciada, simplemente redirige al usuario
         alert("No hay sesión iniciada");
-        // Redirigir al usuario a la página de inicio de sesión o a donde desees
-        window.location.href = "../fuente/html/login.html";
     }
 });
 
@@ -160,13 +159,13 @@ ropaM.addEventListener("click", (evento) =>{
     }
 });
 
-let loadingMoreProducts = false;
+
 //Evento que controla el escroll infinito de la pagina
 window.addEventListener('scroll', async () => {
-    if (!loadingMoreProducts && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) {
-        loadingMoreProducts = true;
+    if (!masProductos && (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 10) {
+        masProductos = true;
         await cargarMasProductos();
-        loadingMoreProducts = false;
+        masProductos = false;
     }
 });
 ///////
@@ -198,12 +197,12 @@ async function obtenerProductos(offset) {
     }
 }
 
-//Funcion que se encarga de añadir productos al carrito al dar al boton añadir al carrito
-function añadirProductoAlCarrito(producto) {
+//Funcion que se encarga de add productos al carrito al dar al boton add al carrito
+function addProductoAlCarrito(producto) {
     const sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada'));
 
     if (!sesionIniciada) {
-        alert("Debes iniciar sesion para añadir productos al carrito");
+        alert("Debes iniciar sesion para add productos al carrito");
     }else{
         let unidadesProd = document.getElementById(`input-${producto.id}`)
         carrito.classList.add('animacion-carrito');
@@ -211,7 +210,7 @@ function añadirProductoAlCarrito(producto) {
             carrito.classList.remove('animacion-carrito');
         }, 1000);
     
-        const producto_añadido = {
+        const producto_add = {
             id: producto.id,
             image: producto.image,
             title: producto.title,
@@ -227,14 +226,14 @@ function añadirProductoAlCarrito(producto) {
         let encontrado = false;
         carritoUsuario.forEach((articulo) => {
             if (producto.id == articulo.id) {
-                articulo.unidades += producto_añadido.unidades;
+                articulo.unidades += producto_add.unidades;
                 encontrado = true;
             }
         });
     
         // Si el producto no se encontró en el carrito, agregarlo
         if (!encontrado) {
-            carritoUsuario.push(producto_añadido);
+            carritoUsuario.push(producto_add);
         }
     
         // Actualizar el carrito en el localStorage
@@ -245,18 +244,18 @@ function añadirProductoAlCarrito(producto) {
 
 /*
     Funcion que crea los botones de: 
-        -Añadir a favoritos con su evento
+        -add a favoritos con su evento
         -Boton me gusta y no me gusta con sus eventos
-        -Boton de añadir al carrito con su evento
+        -Boton de add al carrito con su evento
 */
 function crearBotonesDeAccion(producto) {
 
-    // Botón "Añadir al carrito"
+    // Botón "add al carrito"
     const botonAgregar = document.createElement('button');
     botonAgregar.textContent = 'Añadir al carrito';
     botonAgregar.addEventListener('click', (evento) => {
         evento.stopPropagation();
-        añadirProductoAlCarrito(producto);
+        addProductoAlCarrito(producto);
     });
 
     // Botón de favorito
@@ -273,33 +272,37 @@ function crearBotonesDeAccion(producto) {
         evento.stopPropagation();
 
         // Obtener el objeto sesion_iniciada del localStorage
-        let sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada')) || {};
+        let sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada'));
 
-        // Verificar si ya existe un array de favoritos, si no, crear uno vacío
-        let favoritos = sesionIniciada.favoritos || [];
+        if (!sesionIniciada) {
+            alert("Debes iniciar sesion para agregar productos a favoritos");
+        }else{
+            // Verificar si ya existe un array de favoritos, si no, crear uno vacío
+            let favoritos = sesionIniciada.favoritos || [];
 
-        // Obtener el ID del producto al que se le ha dado favorito
-        let idProducto = producto.id;
+            // Obtener el ID del producto al que se le ha dado favorito
+            let idProducto = producto.id;
 
-        // Verificar si el producto ya está en la lista de favoritos
-        if (!favoritos.includes(idProducto)) {
-            // Agregar el ID del producto a la lista de favoritos
-            favoritos.push(idProducto);
-            // Agregar el estilo de favorito activo al botón
-            botonFavorito.classList.add('favorito-activo');
-        } else {
-            // Si el producto ya está en la lista de favoritos, quitarlo de la lista y el estilo de favorito activo del botón
-            favoritos.forEach((item, index) => {
-                if (item === idProducto) {
-                    favoritos.splice(index, 1); // Eliminar el elemento de la lista de favoritos
-                    botonFavorito.classList.remove('favorito-activo'); // Quitar el estilo de favorito activo del botón
-                }
-            });
+            // Verificar si el producto ya está en la lista de favoritos
+            if (!favoritos.includes(idProducto)) {
+                // Agregar el ID del producto a la lista de favoritos
+                favoritos.push(idProducto);
+                // Agregar el estilo de favorito activo al botón
+                botonFavorito.classList.add('favorito-activo');
+            } else {
+                // Si el producto ya está en la lista de favoritos, quitarlo de la lista y el estilo de favorito activo del botón
+                favoritos.forEach((item, index) => {
+                    if (item === idProducto) {
+                        favoritos.splice(index, 1); // Eliminar el elemento de la lista de favoritos
+                        botonFavorito.classList.remove('favorito-activo'); // Quitar el estilo de favorito activo del botón
+                    }
+                });
+            }
+
+             // Actualizar el objeto sesion_iniciada en el localStorage con la lista de favoritos actualizada
+             sesionIniciada.favoritos = favoritos;
+             localStorage.setItem('sesion_iniciada', JSON.stringify(sesionIniciada));
         }
-
-        // Actualizar el objeto sesion_iniciada en el localStorage con la lista de favoritos actualizada
-        sesionIniciada.favoritos = favoritos;
-        localStorage.setItem('sesion_iniciada', JSON.stringify(sesionIniciada));
     });
 
     // Botón de me gusta
@@ -385,8 +388,12 @@ async function obtenerDetallesProducto(id) {
         botonVolver.textContent = 'Volver';
         botonVolver.addEventListener('click', () => {
             contenedor_botones.classList.remove('oculto');
-            // Eliminar el div de detalles del producto al hacer clic en Volver
-            renderizarLista();
+            if (vistaActual == "lista") {
+                renderizarLista();
+            }else{
+                renderizarTabla();
+            }
+            
         });
 
         // Agregar elementos al div de detalles del producto
@@ -399,6 +406,7 @@ async function obtenerDetallesProducto(id) {
 
         // Agregar botones de acción al div de detalles del producto
         detalleProductoDiv.appendChild(botonesDeAccion.botonAgregar);
+        detalleProductoDiv.appendChild(botonesDeAccion.botonFavorito);
         detalleProductoDiv.appendChild(botonVolver);
 
         // Agregar el div de detalles del producto al cuerpo del documento
@@ -446,7 +454,7 @@ function crearFilasTabla(producto) {
 
     // Celda para los botones de acción
     let celdaAcciones = document.createElement('td');
-    celdaAcciones.classList.add("botones-accion");
+    celdaAcciones.classList.add("botonera");
 
     // Botones de acción
     let botones = crearBotonesDeAccion(producto);
@@ -504,10 +512,14 @@ function crearElementoLista(producto) {
 
     // Crear los botones de acción
     const botones = crearBotonesDeAccion(producto);
-    li.appendChild(botones.botonAgregar);
-    li.appendChild(botones.botonFavorito);
-    li.appendChild(botones.botonMeGusta);
-    li.appendChild(botones.botonNoMeGusta);
+    let botonera = document.createElement('div');
+    botonera.classList.add('botonera');
+    botonera.appendChild(botones.botonAgregar);
+    botonera.appendChild(botones.botonFavorito);
+    botonera.appendChild(botones.botonMeGusta);
+    botonera.appendChild(botones.botonNoMeGusta);
+
+    li.appendChild(botonera);
 
     // Agregar el evento de clic para obtener detalles del producto
     li.addEventListener('click', () => {
@@ -541,6 +553,7 @@ thead.appendChild(encabezado);
 
 function crearTablaHTML(productos) {
     table = document.createElement('table');
+    table.classList.add('tabla-prod');
     tbody = document.createElement('tbody');
 
     productos.forEach((producto) => {
@@ -557,6 +570,7 @@ function crearTablaHTML(productos) {
 /////CREACION DE LA VISTA LISTA
 function crearListaHTML(productos) {
     ul = document.createElement('ul');
+    ul.classList.add('lista-prod');
     productos.forEach(producto => {
         let li = crearElementoLista(producto);
         ul.appendChild(li);
@@ -564,8 +578,8 @@ function crearListaHTML(productos) {
     return ul;
 }
 
-///FUNCION para añadir mas elementos a la lista al hacer scroll 
-function añadirElementoALista(productos) {
+///FUNCION para add mas elementos a la lista al hacer scroll 
+function addElementoALista(productos) {
     productos.forEach(producto => {
         let li = crearElementoLista(producto);
         ul.appendChild(li);
@@ -573,8 +587,8 @@ function añadirElementoALista(productos) {
 }
 
 
-//Funcion para añadir mas elementos a la tabla al hacer scroll
-function añadirElementoATabla(productos) {
+//Funcion para add mas elementos a la tabla al hacer scroll
+function addElementoATabla(productos) {
     productos.forEach((producto) => {
         let filas = crearFilasTabla(producto);
         tbody.appendChild(filas);
@@ -617,9 +631,9 @@ async function cargarMasProductos() {
 
         // Agregar los nuevos productos al final del contenedor
         if (vistaActual === 'lista') {
-            añadirElementoALista(nuevosProductos);
+            addElementoALista(nuevosProductos);
         } else if (vistaActual === 'tabla') {
-            añadirElementoATabla(nuevosProductos);
+            addElementoATabla(nuevosProductos);
         }
     } catch (error) {
         console.error('Error al cargar más productos:', error);
