@@ -4,6 +4,7 @@ let realizarCompra = document.createElement("button");
 realizarCompra.classList.add("realizar-compra");
 realizarCompra.textContent = "Realizar Compra";
 
+//Comprobacion para saber si la sesion esta iniciada en caso de que no da el mensaje de error
 if (!carrito) {
     let parrafo = document.createElement("p");
     parrafo.innerHTML = "No hay una sesion iniciada, por favor inicia sesion para continuar";
@@ -13,6 +14,7 @@ if (!carrito) {
     
     let productosCarrito = carrito.carrito;
 
+    //Evnto cuando se hace la compra
     realizarCompra.addEventListener("click", ()=>{
         alert("Gracias por su compra");
         carrito.carrito = [];
@@ -20,7 +22,7 @@ if (!carrito) {
         window.location.href = "../index.html";
     });
     
-    
+    //Comprobar que haya productos en el carrito en caso de que no da el error y da la opcion de ir a ver los productos
     if (productosCarrito.length == 0) {
         let parrafo = document.createElement("p");
         let boton = document.createElement("button");
@@ -38,7 +40,7 @@ if (!carrito) {
     }
 }
 
-
+//Creacion de la tabla del carrito
 function crearTablaCarrito(productosCarrito) {
     let tabla = document.createElement("table");
     tabla.classList.add("tabla-carrito");
@@ -158,6 +160,7 @@ function crearTablaCarrito(productosCarrito) {
     return tabla;
 }
 
+//Funcion para actualizar el localStorage dependiendo de la opcion pulsada
 function actualizarCarrito(idProducto, nuevasUnidades = 0, eliminar = false) {
     // Obtener el carrito del localStorage
     let datosLocalStorage = JSON.parse(localStorage.getItem("sesion_iniciada"));

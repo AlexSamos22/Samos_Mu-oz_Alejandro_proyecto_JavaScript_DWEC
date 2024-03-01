@@ -30,7 +30,6 @@ const productosPorPagina = 20;
 // Variable para el número total de productos cargados
 let totalProductosCargados = 0;
 
-///EVENT LISENERS
 //Evento para poder cerrar sesion, y guardar el carrito actual y los favoritos del usuario en una sesion local propia por usuario
 cerrarSesion.addEventListener('click', (evento) => {
     evento.preventDefault();
@@ -111,6 +110,7 @@ desc.addEventListener('click', () => {
     }
 });
 
+//Evento que cambia el contenedor y muestra solo la seccion joyeria
 joyeria.addEventListener("click", (evento) =>{
     evento.preventDefault();
     titulo.innerHTML = "Seccion Joyeria";
@@ -123,6 +123,7 @@ joyeria.addEventListener("click", (evento) =>{
     }
 });
 
+//Evento que cambia el contenedor y muestra solo la seccion electronica
 electronica.addEventListener("click", (evento) =>{
     evento.preventDefault();
     titulo.innerHTML = "Seccion Electronica";
@@ -135,6 +136,7 @@ electronica.addEventListener("click", (evento) =>{
     }
 });
 
+//Evento que cambia el contenedor y muestra solo la seccion ropa hombre
 ropaH.addEventListener("click", (evento) =>{
     evento.preventDefault();
     titulo.innerHTML = "Secccion Hombres";
@@ -147,6 +149,7 @@ ropaH.addEventListener("click", (evento) =>{
     }
 });
 
+//Evento que cambia el contenedor y muestra solo la seccion ropa mujer
 ropaM.addEventListener("click", (evento) =>{
     evento.preventDefault();
     titulo.innerHTML = "Seccion Mujeres";
@@ -168,21 +171,21 @@ window.addEventListener('scroll', async () => {
         masProductos = false;
     }
 });
-///////
+
 
 ///Funciones para obtener los productos y crear las vistas
 async function obtenerProductos(offset) {
     try {
         let response;
         let url;
-        // Construye la URL para obtener los productos con el offset y la cantidad de productos por página adecuados
+        //  URL para obtener los productos con el offset y la cantidad de productos por página
         if (categoria) {
             url = `${url_productos}/${categoriaSelecionada}?limit=${productosPorPagina}&offset=${offset}`
         }else{
             url = `${url_productos}?limit=${productosPorPagina}&offset=${offset}`;
         }
         
-        // Agrega la lógica de ordenar si es necesario
+        // Si se le da a ordenar se cambia la url
         if (ordenar && tipoOrden) {
             url += `&sort=${tipoOrden}`;
         }
@@ -199,8 +202,9 @@ async function obtenerProductos(offset) {
 
 //Funcion que se encarga de add productos al carrito al dar al boton add al carrito
 function addProductoAlCarrito(producto) {
-    const sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada'));
+    let sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada'));
 
+    //Si no esta la sesion_iniciada no se puede ver el carrito
     if (!sesionIniciada) {
         alert("Debes iniciar sesion para add productos al carrito");
     }else{
@@ -210,7 +214,7 @@ function addProductoAlCarrito(producto) {
             carrito.classList.remove('animacion-carrito');
         }, 1000);
     
-        const producto_add = {
+        let producto_add = {
             id: producto.id,
             image: producto.image,
             title: producto.title,
@@ -262,8 +266,8 @@ function crearBotonesDeAccion(producto) {
     const botonFavorito = document.createElement('button');
     botonFavorito.innerHTML = '<i class="fas fa-heart"></i>';
     botonFavorito.classList.add('boton-favorito');
-    const sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada')) || {};
-    const favoritos = sesionIniciada.favoritos || [];
+    let sesionIniciada = JSON.parse(localStorage.getItem('sesion_iniciada')) || {};
+    let favoritos = sesionIniciada.favoritos || [];
     if (favoritos.includes(producto.id)) {
         // Si el ID del producto está en la lista de favoritos, aplicar un estilo diferente
         botonFavorito.classList.add('favorito-activo');
@@ -347,8 +351,8 @@ function crearBotonesDeAccion(producto) {
 async function obtenerDetallesProducto(id) {
     try {
         // Realizar una solicitud para obtener los detalles del producto por ID
-        const response = await fetch(`${url_productos}/${id}`);
-        const producto = await response.json();
+        let response = await fetch(`${url_productos}/${id}`);
+        let producto = await response.json();
 
         titulo.innerHTML = producto.title;
         // Crear un div para mostrar los detalles del producto
@@ -370,7 +374,7 @@ async function obtenerDetallesProducto(id) {
         imagenProducto.alt = producto.title;
 
         // Crear botones de acción
-        const botonesDeAccion = crearBotonesDeAccion(producto);
+        let botonesDeAccion = crearBotonesDeAccion(producto);
 
         //Unidades del producto
         let inputUnidades = document.createElement('input');
@@ -578,7 +582,7 @@ function crearListaHTML(productos) {
     return ul;
 }
 
-///FUNCION para add mas elementos a la lista al hacer scroll 
+///FUNCION para añadir mas elementos a la lista al hacer scroll 
 function addElementoALista(productos) {
     productos.forEach(producto => {
         let li = crearElementoLista(producto);
@@ -587,7 +591,7 @@ function addElementoALista(productos) {
 }
 
 
-//Funcion para add mas elementos a la tabla al hacer scroll
+//Funcion para añadir mas elementos a la tabla al hacer scroll
 function addElementoATabla(productos) {
     productos.forEach((producto) => {
         let filas = crearFilasTabla(producto);
