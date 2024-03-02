@@ -391,6 +391,7 @@ async function obtenerDetallesProducto(id) {
         botonVolver.textContent = 'Volver';
         botonVolver.addEventListener('click', () => {
             contenedor_botones.classList.remove('oculto');
+            titulo.innerHTML= "Productos tienda";
             if (vistaActual == "lista") {
                 renderizarLista();
             }else{
