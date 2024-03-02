@@ -205,7 +205,7 @@ function addProductoAlCarrito(producto) {
 
     //Si no esta la sesion_iniciada no se puede ver el carrito
     if (!sesionIniciada) {
-        alert("Debes iniciar sesion para add productos al carrito");
+        alert("Debes iniciar sesion para agregar productos al carrito");
     }else{
         let unidadesProd = document.getElementById(`input-${producto.id}`)
         carrito.classList.add('animacion-carrito');
