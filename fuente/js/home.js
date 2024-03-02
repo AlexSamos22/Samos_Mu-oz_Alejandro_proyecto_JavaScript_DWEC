@@ -67,7 +67,7 @@ cerrarSesion.addEventListener('click', (evento) => {
         localStorage.removeItem('sesion_iniciada');
 
         alert("Hasta la próxima");
-        window.location.href = "../fuente/index.html";
+        location.reload();
     } else {
         // Si no hay sesión iniciada, simplemente redirige al usuario
         alert("No hay sesión iniciada");
